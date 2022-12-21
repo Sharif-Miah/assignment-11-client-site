@@ -1,16 +1,22 @@
 import { GithubAuthProvider, GoogleAuthProvider } from 'firebase/auth';
-import React, { useContext } from 'react';
+import React, { useContext, useState } from 'react';
 import { Link, useLocation, useNavigate } from 'react-router-dom';
 import { toast } from 'react-toastify';
 import { AuthContext } from '../../Context/ContextProvider';
-
 
 const provider = new GoogleAuthProvider();
 const githubProvider = new GithubAuthProvider();
 
 const Login = () => {
-    const toastify = () => toast.success('successfully Delete')
+    const [errors, setErrors] = useState({
+        email: "",
+        password: "",
+    })
+    const [userInfo, setUserInfo] = useState({
+        email: "", password: ""
+    })
 
+    const toastify = () => toast.success('successfully Login')
     const { googleAuthProvider, githubAuthProvider, loginProvider } = useContext(AuthContext);
     const location = useLocation();
     const navigate = useNavigate()
@@ -56,18 +62,48 @@ const Login = () => {
             .catch(error => console.error(error))
     }
 
+     // get email
+     const handleEmailChange = e => {
+        const emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
+        if (emailRegex.test(e.target.value)) {
+            setUserInfo({ ...userInfo, email: e.target.value });
+            setErrors({ ...errors, email: '' });
+        } else {
+            setErrors({ ...errors, email: 'Please Provide a valid email' });
+            setUserInfo({ ...userInfo, email: '' });
+        }
+    };
+
+    // password error
+
+    const handlePasswordChange = e => {
+        const passwordRegex = /(?=^.{6,}$)((?=.*\d)|(?=.*\W+))(?![.\n])(?=.*[A-Z])(?=.*[a-z])/;
+        if (passwordRegex.test(e.target.value)) {
+            setUserInfo({ ...userInfo, password: e.target.value });
+            setErrors({ ...errors, password: '' });
+        } else {
+            setErrors({ ...errors, password: 'Please Provide a valid password' });
+            setUserInfo({ ...userInfo, password: '' });
+        }
+    };
+
     return (
         <div className="w-full mx-auto border border-amber-400 max-w-md p-8 space-y-3 rounded-xl dark:bg-gray-900 dark:text-gray-100">
             <h1 className="text-2xl font-bold text-center">Login</h1>
             <form onSubmit={handleLoginSubmit} novalidate="" action="" className="space-y-6 ng-untouched ng-pristine ng-valid">
-                <div className="space-y-1 text-sm">
-                    <label for="email" className="block text-gray-900">Email</label>
-                    <input type="email" name="email" id="email" placeholder="Email" className="w-full px-4 py-3 rounded-md border-gray-700 bg-gray-900 text-gray-100 focus:dark:border-violet-400" required />
+
+            <div className="space-y-1 text-sm">
+                    <label htmlFor="email" className="block text-gray-900">Email</label>
+                    <input onChange={handleEmailChange} type="email" name="email" id="email" placeholder="Email" className="w-full px-4 py-3 rounded-md border-gray-700 bg-gray-900 text-gray-100 focus:dark:border-violet-400" required />
+                    {errors?.email && <p className='text-red-500'>{errors.email}</p>}
                 </div>
+
                 <div className="space-y-1 text-sm">
-                    <label for="password" className="block text-gray-900">Password</label>
-                    <input type="password" name="password" id="password" placeholder="Password" className="w-full px-4 py-3 rounded-md border-gray-700 bg-gray-900 text-gray-100 focus:dark:border-violet-400" required />
+                    <label htmlFor="password" className="block text-gray-900">Password</label>
+                    <input onChange={handlePasswordChange} type="password" name="password" id="password" placeholder="Password" className="w-full px-4 py-3 rounded-md border-gray-700 bg-gray-900 text-gray-100 focus:dark:border-violet-400" required />
+                    {errors?.password && <p className='text-red-500'>{errors.password}</p>}
                 </div>
+
                 <button className="block w-full p-3 text-center rounded-sm bg-amber-400">Login</button>
             </form>
             <div className="flex items-center pt-4 space-x-1">
@@ -88,7 +124,7 @@ const Login = () => {
                 </button>
             </div>
             <p className="text-xs text-center sm:px-6 dark:text-gray-400">Don't have an account?
-                <Link to='/register' rel="noopener noreferrer" href="#" className="underline dark:text-gray-100">Sign up</Link>
+                <Link to='/register' rel="noopener noreferrer" href="#" className="underline dark:text-gray-100 text-lg"> Sign up</Link>
             </p>
         </div>
     );

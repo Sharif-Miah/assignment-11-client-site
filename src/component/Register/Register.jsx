@@ -1,8 +1,8 @@
 import { GithubAuthProvider, GoogleAuthProvider } from 'firebase/auth';
 import React, { useContext, useState } from 'react';
 import { Link, useNavigate } from 'react-router-dom';
+import { toast } from 'react-toastify';
 import { AuthContext } from '../../Context/ContextProvider';
-import {toast} from 'react-toastify'
 
 
 const provider = new GoogleAuthProvider();
@@ -46,6 +46,7 @@ const Register = () => {
         registerInprovider(email, password)
             .then(result => {
                 const user = result.user;
+
                 console.log(user);
                 form.reset();
                 handleUpdateUserProfile(name, photourl)
@@ -100,6 +101,8 @@ const Register = () => {
         }
     };
 
+    // password error
+
     const handlePasswordChange = e => {
         const passwordRegex = /(?=^.{6,}$)((?=.*\d)|(?=.*\W+))(?![.\n])(?=.*[A-Z])(?=.*[a-z])/;
         if (passwordRegex.test(e.target.value)) {
@@ -123,7 +126,7 @@ const Register = () => {
                 </div>
                 <div className="space-y-1 text-sm">
                     <label htmlFor="photourl" className="block text-gray-900">Photo URL</label>
-                    <input type="text" name="photourl" id="photourl" placeholder="Photo URL" className="w-full px-4 py-3 rounded-md border-gray-700 bg-gray-900 text-gray-100 focus:dark:border-violet-400" />
+                    <input type="text" name="photourl" id="photourl" placeholder="Photo URL" className="w-full px-4 py-3 rounded-md border-gray-700 bg-gray-900 text-gray-100 focus:dark:border-violet-400" required/>
                 </div>
 
                 <div className="space-y-1 text-sm">
@@ -158,7 +161,7 @@ const Register = () => {
                 </button>
             </div>
             <p className="text-xs text-center sm:px-6 dark:text-gray-400">Already have a Account
-                <Link to='/login' rel="" className="underline dark:text-gray-100"> Login</Link>
+                <Link to='/login' rel="" className="underline dark:text-gray-100 text-lg"> Login</Link>
             </p>
 
         </div>
