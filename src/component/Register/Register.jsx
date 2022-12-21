@@ -2,12 +2,14 @@ import { GithubAuthProvider, GoogleAuthProvider } from 'firebase/auth';
 import React, { useContext, useState } from 'react';
 import { Link, useNavigate } from 'react-router-dom';
 import { AuthContext } from '../../Context/ContextProvider';
+import {toast} from 'react-toastify'
 
 
 const provider = new GoogleAuthProvider();
 const githubProvider = new GithubAuthProvider();
 
 const Register = () => {
+    const toastify = () => toast.success('successfully Delete')
 
     const [errors, setErrors] = useState({
         email: "",
@@ -47,6 +49,7 @@ const Register = () => {
                 console.log(user);
                 form.reset();
                 handleUpdateUserProfile(name, photourl)
+                toastify()
                 navigate('/')
             })
             .catch(error => console.error(error))
