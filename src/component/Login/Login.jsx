@@ -1,12 +1,15 @@
 import { GithubAuthProvider, GoogleAuthProvider } from 'firebase/auth';
 import React, { useContext } from 'react';
 import { Link, useLocation, useNavigate } from 'react-router-dom';
+import { toast } from 'react-toastify';
 import { AuthContext } from '../../Context/ContextProvider';
+
 
 const provider = new GoogleAuthProvider();
 const githubProvider = new GithubAuthProvider();
 
 const Login = () => {
+    const toastify = () => toast.success('successfully Delete')
 
     const { googleAuthProvider, githubAuthProvider, loginProvider } = useContext(AuthContext);
     const location = useLocation();
@@ -23,6 +26,7 @@ const Login = () => {
                 const user = result.user;
                 form.reset()
                 console.log(user);
+                toastify()
                 navigate(from, { replace: true })
             })
             .catch(error => console.error(error))
